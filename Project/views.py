@@ -2,12 +2,18 @@ from django.http import HttpResponse
 from django.shortcuts import render
 def home (request,key):
  roll = str(key).upper()
- from selenium import webdriver
+ 
  from selenium.webdriver.common.by import By
- from selenium.webdriver.chrome.options import Options
- options = Options()
- options.headless = True
- driver = webdriver.Chrome( options= options)
+ from selenium import webdriver
+ import os
+
+ chrome_options = webdriver.ChromeOptions()
+ chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+ chrome_options.add_argument("--headless")
+ chrome_options.add_argument("--disable-dev-shm-usage")
+ chrome_options.add_argument("--no-sandbox")
+ driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+
  driver.get("http://tkrec.in/")
  driver.find_element(By.XPATH,('//*[@id="login-username"]')).send_keys(roll)
  driver.find_element(By.XPATH,('//*[@id="login-password"]')).send_keys(roll)
